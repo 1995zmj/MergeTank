@@ -17,6 +17,7 @@ export interface TankAttributes {
 export interface BulletAttributes {
     // -1 代表是无线距离知道碰到障碍物停止
     // 到达最远距离消失
+    startPosition: cc.Vec2;
     maxDistance: number;
     direction: cc.Vec2;
     speed: number;

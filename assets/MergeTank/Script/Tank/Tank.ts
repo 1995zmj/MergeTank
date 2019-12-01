@@ -13,11 +13,16 @@ export default class Tank extends cc.Component {
     barrel: cc.Sprite = null;
 
     @property(cc.Prefab)
-    bullet: cc.Prefab = null;
+    bulletPerfab: cc.Prefab = null;
     bulletPool: cc.NodePool = null;
+
+    @property(cc.Node)
+    bulletLayer: cc.Node = null;
 
     direction: cc.Vec2 = cc.v2(0, -1);
     tankAttributes: TankAttributes = null;
+    bulletAttributes: BulletAttributes
+
 
     onLoad() {
         // cc.log(this.direction.signAngle(cc.v2(0,1)) / Math.PI * 180);
@@ -36,31 +41,59 @@ export default class Tank extends cc.Component {
                 atkRange: 1,
             }
         }
-        this.init(tankAttributes);
+        this.initTankAttributes(tankAttributes);
+
+        let bulletAttributes: BulletAttributes = {
+            maxDistance: 10,
+            direction: this.direction,
+            startPosition: this.node.position,
+            speed: 1000,
+        }
+
+        this.bulletAttributes = bulletAttributes;
     }
 
-    init(tankAttributes: TankAttributes) {
+    onEnable()
+    {
+        this.startAtk();
+    }
+
+    initTankAttributes(tankAttributes: TankAttributes) {
         this.tankAttributes = tankAttributes;
         this.bulletPool = new cc.NodePool(Bullet);
     }
 
 
-
-    update(dt) {
-
+    startAtk()
+    {
+        this.schedule(this.spawnBullet, this.tankAttributes.combatAttributes.atkSpeed);
     }
 
 
-    atk() {
-
+    stopAtk()
+    {
+        this.unschedule(this.spawnBullet);
     }
 
-    spawnBullet(bulletAttributes: BulletAttributes) {
+    spawnBullet() {
+        let node: cc.Node = null;
         if (this.bulletPool.size() > 0) {
-            let node = this.bulletPool.get();
+            node = this.bulletPool.get();
         }
         else {
-            this.init
+            node = cc.instantiate(this.bulletPerfab);
         }
+        let bullet = node.getComponent(Bullet);
+        if(bullet)
+        {
+            bullet.init(this, this.bulletAttributes);
+        }
+
+        bullet.node.parent = this.bulletLayer;
+    }
+
+    recycleBullet(node: cc.Node)
+    {
+        this.bulletPool.put(node);
     }
 }
