@@ -1,99 +1,56 @@
 import { TankAttributes, BulletAttributes } from "../AttributesInterface";
 import Bullet from "./Bullet";
+import TankController from "../TankController";
+import Body from "./Body";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
 export default class Tank extends cc.Component {
 
-    @property(cc.Sprite)
-    body: cc.Sprite = null;
-
-    @property(cc.Sprite)
-    barrel: cc.Sprite = null;
+    @property(cc.Prefab)
+    bodyPrefab: cc.Prefab = null;
 
     @property(cc.Prefab)
-    bulletPerfab: cc.Prefab = null;
-    bulletPool: cc.NodePool = null;
+    barrelPrefab: cc.Prefab = null;
 
-    @property(cc.Node)
-    bulletLayer: cc.Node = null;
-
-    direction: cc.Vec2 = cc.v2(0, -1);
     tankAttributes: TankAttributes = null;
-    bulletAttributes: BulletAttributes
 
+    private _controller: TankController = null;
+    private defaultDirection: cc.Vec2 = cc.v2(0, -1);
 
     onLoad() {
         // cc.log(this.direction.signAngle(cc.v2(0,1)) / Math.PI * 180);
         // this.node.rotation = this.direction.signAngle(cc.v2(0,1)) / Math.PI * 180;
-
-        let tankAttributes: TankAttributes = {
-            id: 1,
-            level: 1,
-            bulletType: 1,
-            combatAttributes: {
-                atk: 1,
-                dps: 1,
-                hp: 1,
-                atkSpeed: 1,
-                moveSpeed: 1,
-                atkRange: 1,
-            }
-        }
-        this.initTankAttributes(tankAttributes);
-
-        let bulletAttributes: BulletAttributes = {
-            maxDistance: 10,
-            direction: this.direction,
-            startPosition: this.node.position,
-            speed: 1000,
-        }
-
-        this.bulletAttributes = bulletAttributes;
     }
 
-    onEnable()
-    {
-        this.startAtk();
-    }
-
-    initTankAttributes(tankAttributes: TankAttributes) {
+    init(controller:TankController, tankAttributes: TankAttributes) {
+        this._controller = controller;
         this.tankAttributes = tankAttributes;
-        this.bulletPool = new cc.NodePool(Bullet);
+
+        this.node.rotation = this.defaultDirection.signAngle(this.tankAttributes.direction) / Math.PI * 180;
+        this.node.position = this.tankAttributes.startPosition;
+    }
+
+    initBody()
+    {
+        let node = cc.instantiate(this.bodyPrefab);
+        let body = node.getComponent(Body);
+
+        this.node
     }
 
 
     startAtk()
     {
-        this.schedule(this.spawnBullet, this.tankAttributes.combatAttributes.atkSpeed);
+        // this.schedule(this.spawnBullet, this.tankAttributes.combatAttributes.atkSpeed);
     }
 
 
     stopAtk()
     {
-        this.unschedule(this.spawnBullet);
+        // this.unschedule(this.spawnBullet);
     }
 
-    spawnBullet() {
-        let node: cc.Node = null;
-        if (this.bulletPool.size() > 0) {
-            node = this.bulletPool.get();
-        }
-        else {
-            node = cc.instantiate(this.bulletPerfab);
-        }
-        let bullet = node.getComponent(Bullet);
-        if(bullet)
-        {
-            bullet.init(this, this.bulletAttributes);
-        }
-
-        bullet.node.parent = this.bulletLayer;
-    }
-
-    recycleBullet(node: cc.Node)
-    {
-        this.bulletPool.put(node);
-    }
+    
 }

@@ -1,0 +1,5 @@
+{
+    "0":{"id":0,"atk": 10,"moveSpeed": 100, "maxDistance": 1000,"sprite":"bulletDark3_outline"},
+    "1":{"id":1,"atk": 20,"moveSpeed": 100, "maxDistance": 1000,"sprite":"bulletDark1_outline"},
+    "2":{"id":2,"atk": 30,"moveSpeed": 100, "maxDistance": 1000,"sprite":"bulletDark2_outline"}
+}

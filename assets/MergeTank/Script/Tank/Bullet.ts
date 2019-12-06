@@ -1,5 +1,6 @@
 import Tank from "./Tank";
 import { BulletAttributes } from "../AttributesInterface";
+import BulletController from "../BulletController";
 
 const { ccclass, property } = cc._decorator;
 
@@ -8,10 +9,10 @@ export default class Bullet extends cc.Component {
     isvalid: boolean = false;
 
     bulletAttributes: BulletAttributes = null;
-    private _master: Tank = null;
+    private _master: BulletController = null;
     private _distance: number = null;
     private defaultDirection: cc.Vec2 = cc.v2(0, 1);
-    init(master: Tank, bulletAttributes: BulletAttributes) {
+    init(master: BulletController, bulletAttributes: BulletAttributes) {
         this._master = master;
         this._distance = 0;
         this.bulletAttributes = bulletAttributes;
@@ -27,7 +28,7 @@ export default class Bullet extends cc.Component {
 
     update(dt) {
 
-        if(this._distance > 1000)
+        if(this._distance > this.bulletAttributes.maxDistance)
         {
             this.node.parent = null;
             this._master.recycleBullet(this.node);

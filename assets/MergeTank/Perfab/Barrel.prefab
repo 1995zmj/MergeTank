@@ -12,7 +12,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Bullet",
+    "_name": "Barrel",
     "_objFlags": 0,
     "_parent": null,
     "_children": [],
@@ -21,13 +21,10 @@
     "_components": [
       {
         "__id__": 2
-      },
-      {
-        "__id__": 3
       }
     ],
     "_prefab": {
-      "__id__": 4
+      "__id__": 3
     },
     "_opacity": 255,
     "_color": {
@@ -39,24 +36,24 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 8,
-      "height": 18
+      "width": 12,
+      "height": 30
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
       "x": 0.5,
-      "y": 0
+      "y": 1
     },
     "_position": {
       "__type__": "cc.Vec3",
       "x": 0,
-      "y": -62,
+      "y": -11,
       "z": 0
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 2,
-      "y": 2,
+      "x": 1,
+      "y": 1,
       "z": 1
     },
     "_rotationX": 0,
@@ -84,7 +81,7 @@
     "_srcBlendFactor": 770,
     "_dstBlendFactor": 771,
     "_spriteFrame": {
-      "__uuid__": "04731a51-dc86-4427-b09b-deb5e33cf4c3"
+      "__uuid__": "c5155eb4-45ff-4d43-843a-187de1e59c12"
     },
     "_type": 0,
     "_sizeMode": 1,
@@ -102,24 +99,14 @@
     "_id": ""
   },
   {
-    "__type__": "ac45d7nDDxNOLFv1NMvI8z2",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "_id": ""
-  },
-  {
     "__type__": "cc.PrefabInfo",
     "root": {
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "3ea69aff-e22b-46f3-a69d-df1402d70065"
+      "__uuid__": "bc1857f0-66a0-4a75-9894-f9aa91a42546"
     },
-    "fileId": "08O+S6JeZKmaj8Tc3qG3Ta",
+    "fileId": "35zn+1UTVEGYyg34w8XHlZ",
     "sync": false
   }
 ]

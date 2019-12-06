@@ -1,0 +1,5 @@
+{
+    "0": {"id":0, "moveSpeed": 5, "hp": 10, "sprite":"tankBody_dark_outline"},
+    "1": {"id":1, "moveSpeed": 5, "hp": 20, "sprite":"tankBody_darkLarge_outline"},
+    "2": {"id":2, "moveSpeed": 5, "hp": 30, "sprite":"tankBody_huge_outline"}
+}

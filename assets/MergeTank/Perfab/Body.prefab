@@ -12,85 +12,19 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "Tank",
+    "_name": "Body",
     "_objFlags": 0,
     "_parent": null,
-    "_children": [
-      {
-        "__id__": 2
-      }
-    ],
+    "_children": [],
     "_active": true,
     "_level": 1,
     "_components": [
       {
-        "__id__": 5
+        "__id__": 2
       }
     ],
     "_prefab": {
-      "__id__": 6
-    },
-    "_opacity": 255,
-    "_color": {
-      "__type__": "cc.Color",
-      "r": 255,
-      "g": 255,
-      "b": 255,
-      "a": 255
-    },
-    "_contentSize": {
-      "__type__": "cc.Size",
-      "width": 0,
-      "height": 0
-    },
-    "_anchorPoint": {
-      "__type__": "cc.Vec2",
-      "x": 0.5,
-      "y": 0.5
-    },
-    "_position": {
-      "__type__": "cc.Vec3",
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "_scale": {
-      "__type__": "cc.Vec3",
-      "x": 2,
-      "y": 2,
-      "z": 1
-    },
-    "_rotationX": 0,
-    "_rotationY": 0,
-    "_quat": {
-      "__type__": "cc.Quat",
-      "x": 0,
-      "y": 0,
-      "z": 0,
-      "w": 1
-    },
-    "_skewX": 0,
-    "_skewY": 0,
-    "groupIndex": 0,
-    "_id": ""
-  },
-  {
-    "__type__": "cc.Node",
-    "_name": "Body",
-    "_objFlags": 0,
-    "_parent": {
-      "__id__": 1
-    },
-    "_children": [],
-    "_active": true,
-    "_level": 2,
-    "_components": [
-      {
-        "__id__": 3
-      }
-    ],
-    "_prefab": {
-      "__id__": 4
+      "__id__": 3
     },
     "_opacity": 255,
     "_color": {
@@ -141,7 +75,7 @@
     "_name": "",
     "_objFlags": 0,
     "node": {
-      "__id__": 2
+      "__id__": 1
     },
     "_enabled": true,
     "_srcBlendFactor": 770,
@@ -170,36 +104,9 @@
       "__id__": 1
     },
     "asset": {
-      "__uuid__": "5a270336-8ea4-46f1-a03c-5139ae2ba128"
-    },
-    "fileId": "84J9BqlWxLKqxWGkm/Hc/6",
-    "sync": false
-  },
-  {
-    "__type__": "4e80eYQ+d1Cn7tenUQLHjLO",
-    "_name": "",
-    "_objFlags": 0,
-    "node": {
-      "__id__": 1
-    },
-    "_enabled": true,
-    "bodyPrefab": {
       "__uuid__": "7088ec59-4654-400b-9806-0133ea7ffae8"
     },
-    "barrelPrefab": {
-      "__uuid__": "bc1857f0-66a0-4a75-9894-f9aa91a42546"
-    },
-    "_id": ""
-  },
-  {
-    "__type__": "cc.PrefabInfo",
-    "root": {
-      "__id__": 1
-    },
-    "asset": {
-      "__uuid__": "5a270336-8ea4-46f1-a03c-5139ae2ba128"
-    },
-    "fileId": "17sg6hurNPIY8EbA9Z7kxx",
+    "fileId": "86PqOQ8T9GWJXDlVBDZjFA",
     "sync": false
   }
 ]

@@ -1,15 +1,13 @@
-// TODO
-
-export interface info
-{
-    initData(data: object);
-}
-
+import { BaseDataInfo } from "../DataInfo/BaseDataInfo";
 
 export class DataStorageManager
 {
     private static instance: DataStorageManager;
 
+    // private static gameName: string = "game";
+    private static pureDataCache: object = {};  // 只包含成员变量，不包含成员函数
+    private static gameDataRef: BaseDataInfo = null;  // 游戏数据引用
+    private static keyMap = {}; // 需存储的已改变的数据
 
     static getInstance(): DataStorageManager
     {
@@ -19,120 +17,213 @@ export class DataStorageManager
         }
         return this.instance;
     }
-    
-    setObjData(storageKey: string, obj: object, propertyKey?: string)
+
+    //初始化数据
+    static initLocalData(gameData: BaseDataInfo, callback: Function)
     {
-        let object = obj;
-        for (const key in object)
+        let firstLoginKey = gameData.getStorageKey() + "_firstLogin";
+        this.pureDataCache = JSON.parse(JSON.stringify(gameData));
+        this.gameDataRef = gameData;
+
+        let isFirstLogin = this.getLocalItem(firstLoginKey, true);
+
+        if (!isFirstLogin)
         {
-            if (object.hasOwnProperty(key))
-            {
-                const element = object[key];
-                cc.log("k", key, element);
-
-                if (key == "storageKey")
-                {
-                    continue;
-                }
-
-                if (typeof element == "object")
-                {
-                    cc.log(element.constructor.name)
-                    if (element.storageKey)
-                    {
-                        this.setObjData(element.storageKey, element);
-                    }
-                    else
-                    {
-                        this.setLocalData(storageKey + key, element);
-                    }
-                }
-                else
-                {
-                    this.setLocalData(storageKey + key, element);
-                }
-            }
+            this.getLocalData(this.pureDataCache, gameData);
         }
-    };
+        else
+        {
+            this.setLocalData(this.pureDataCache);
+            this.setLocalItemImmediately(firstLoginKey, false);
+        }
 
 
-    getDataFromLocalData(storageKey: string, obj: info)
-    {
-        let data = {};
-        this.initObjData(storageKey, obj, data);
-        cc.log(data);
-        return data;
+        callback && callback(isFirstLogin);
     }
 
 
-    initObjData(storageKey: string, obj: info, data: object)
+    //保存数据
+    static setLocalData(pureDataCache: object)
     {
-        let object = obj;
-        for (const key in object)
+        for (let key in pureDataCache)
         {
-            if (object.hasOwnProperty(key))
+            let value = pureDataCache[key];
+
+            if (key === "_storageKey")
             {
-                const element = object[key];
-                if (key == "storageKey")
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                cc.log("k", key, element);
-
-                if (typeof element == "object")
+            if (value && typeof value === "object")
+            {
+                if (pureDataCache[key]["_storageKey"])
                 {
-                    if (element.storageKey)
-                    {
-                        data[key] = {};
-                        this.initObjData(element.storageKey, element, data[key]);
-                    }
-                    else
-                    {
-                        data[key] = this.getLocalData(storageKey + key, element);
-                    }
+                    this.setLocalData(pureDataCache[key]);
                 }
                 else
                 {
-                    data[key] = this.getLocalData(storageKey + key, element);
+                    this.setLocalItemImmediately(pureDataCache["_storageKey"] + key, value);
                 }
-
+            }
+            else
+            {
+                this.setLocalItemImmediately(pureDataCache["_storageKey"] + key, value);
             }
         }
-    };
-
-    setLocalData(key: string, data: any)
-    {
-        let tempData = data;
-        if (typeof data == 'object')
-        {
-            tempData = JSON.stringify(data);
-        }
-
-        this.setlocalStorage(key, tempData);
     }
 
-    getLocalData(key, defaultData)
+    // 获得数据
+    static getLocalData(pureDataCache: object, gameData: BaseDataInfo)
     {
+        for (let key in pureDataCache)
+        {
+            let value = pureDataCache[key];
 
-        let value = this.getlocalStorage(key, defaultData);
-        if (typeof defaultData == 'boolean')
-        {
-            value = this.toBoolean(value, defaultData);
+            if (key === "_storageKey")
+            {
+                continue;
+            }
+
+            if (value && typeof value === "object")
+            {
+                if (pureDataCache[key]["_storageKey"])
+                {
+                    this.getLocalData(pureDataCache[key], gameData[key]);
+                }
+                else
+                {
+                    let localValue = this.getLocalItem(pureDataCache["_storageKey"] + key, value);
+                    pureDataCache[key] = localValue;
+                    gameData[key] = localValue;
+                }
+            }
+            else
+            {
+                let localValue = this.getLocalItem(pureDataCache["_storageKey"] + key, value);
+                pureDataCache[key] = localValue;
+                gameData[key] = localValue;
+            }
         }
-        else if (typeof defaultData == 'number')
+    }
+
+    // //推迟更新
+    // static setLocalItemDefer(key, value)
+    // {
+    //     let cloneValue = JSON.parse(JSON.stringify(value));
+    //     this.pushChangedKey(key, cloneValue);
+    //     this.pureDataCache[key] = cloneValue;
+    // }
+
+    // private static pushChangedKey(key, value)
+    // {
+    //     if(typeof value === "object")
+    //     {
+    //         for(let subKey in value)
+    //         {
+    //             if(subKey === "_storageKey")
+    //             {
+    //                 continue;
+    //             }
+    //             let subValue = value[subKey];
+    //             if(this.pureDataCache[key])
+    //             {
+    //                 if(JSON.stringify(this.pureDataCache[key][subKey]) !== JSON.stringify(subValue))
+    //                 {
+    //                     this.keyMap[key+subKey] = {"key":key, "subKey":subKey};
+    //                     this._syncLocalDataInterval();
+    //                 }
+    //             }
+    //             else
+    //             {
+    //                 this.keyMap[key+subKey] = {"key":key, "subKey":subKey};
+    //                 this._syncLocalDataInterval();
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if(JSON.stringify(this.pureDataCache[key]) !== JSON.stringify(value))
+    //         {
+    //             this.keyMap[key] = {"key":key, "subKey":null};
+    //             this._syncLocalDataInterval();
+    //         }
+    //     }
+    // }
+
+    static setLocalItemImmediately(key, value)
+    {
+        this._setData(key, value);
+    }
+
+    static getLocalItem(key, defaultValue?): any
+    {
+        let value = this._getData(key, defaultValue);
+        if (typeof defaultValue == 'boolean')
         {
-            value = this.toNumber(value, defaultData);
+            value = this._toBoolean(value, defaultValue);
         }
-        else if (typeof defaultData == 'object')
+        else if (typeof defaultValue == 'number')
         {
-            value = this.toJSON(value, defaultData);
+            value = this._toNumber(value, defaultValue);
+        }
+        else if (typeof defaultValue == 'object')
+        {
+            value = this._toJSON(value, defaultValue);
         }
         return value;
     }
 
+    // // 主要是延迟保存
+    // private static _syncLocalDataInterval()
+    // {
+    //     if(!this.intervalId) 
+    //     {
+    //         this.intervalId = setTimeout(()=>{
+    //             this.intervalId = null;
+    //             this._syncLocalData();
+    //         },this.syncLocalDataInterval);
+    //     }
+    // }
 
-    toBoolean(src, def)
+    // private static _syncLocalData()
+    // {
+    //     for(let uniKey in this.keyMap)
+    //     {
+    //         let keysObj = this.keyMap[uniKey];
+    //         let key = keysObj["key"];
+    //         let subKey = keysObj["subKey"];
+    //         if(!subKey)
+    //         {
+    //             this._setData(uniKey, this.gameDataRef[key]);
+    //         }
+    //         else
+    //         {
+    //             this._setData(uniKey, this.gameDataRef[key][subKey]);
+    //         }
+    //     }
+    //     this.keyMap = {};
+    // }
+
+    private static _setData(key, value)
+    {
+        if (typeof value === "object")
+        {
+            value = JSON.stringify(value);
+        }
+        cc.sys.localStorage.setItem(key, value);
+    }
+
+    private static _getData(key, defaultValue)
+    {
+        let ret = cc.sys.localStorage.getItem(key);
+        if ((ret == null || ret == "null") && defaultValue != null)
+        {
+            ret = defaultValue;
+        }
+        return ret;
+    }
+
+    private static _toBoolean(src, def)
     {
         if (typeof src == 'boolean')
         {
@@ -150,60 +241,39 @@ export class DataStorageManager
         {
             return true;
         }
-    };
+    }
 
-    toNumber(src, def)
+    private static _toNumber(src, def)
     {
-        var res = Number(src);
-        if (isNaN(res))
+        let ret = Number(src);
+        if (isNaN(ret))
         {
             return def;
         }
         else
         {
-            return res;
+            return ret;
         }
-    };
+    }
 
-    toJSON(src, def)
+    private static _toJSON(src, def)
     {
-        var res;
         try
         {
-            res = JSON.parse(src);
-            if (typeof res == 'object' && res)
+            let ret = JSON.parse(src);
+            if (typeof ret == 'object' && ret)
             {
-                return res;
-            } else
+                return ret;
+            }
+            else
             {
                 return def;
             }
-
         }
         catch (e)
         {
             return def;
         }
-    };
-
-
-    setlocalStorage(key: string, data: any)
-    {
-        if (typeof data == 'object')
-        {
-            data = JSON.stringify(data);
-        }
-        cc.sys.localStorage.setItem(key, data);
-    };
-
-    getlocalStorage(key: string, defaultData: any)
-    {
-        var res = cc.sys.localStorage.getItem(key);
-        if ((res == null || res == "null") && defaultData != null)
-        {
-            res = defaultData;
-        }
-        return res;
-    };
+    }
 
 }

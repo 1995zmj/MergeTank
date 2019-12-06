@@ -2,9 +2,10 @@ import { ConfigManager } from "./ConfigManager";
 import { PoolManager } from "./PoolManager";
 import { ListenerManager } from "./ListenerManager";
 import { ListenerType } from "../Data/ListenerType";
-import { GameDataManager } from "./GameDataManager";
 import { UIManager } from "./UIManager";
 import { ConstValue } from "../Data/ConstValue";
+import { BaseDataInfo } from "../DataInfo/BaseDataInfo";
+import { PlayerDataInfo } from "../../../MergeTank/Script/Data/DataInfo/PlayerDataInfo";
 
 export enum GameState {
     NONE,
@@ -17,7 +18,7 @@ export enum GameState {
     RESULT
 }
 
-export class GameController {
+export class GameController extends cc.Component{
     private static instance: GameController;
     public static getInstance(): GameController {
         if (this.instance == null) {
@@ -27,6 +28,17 @@ export class GameController {
     }
 
     public gameState: GameState = GameState.IDLE;
+
+    init()
+    {
+        cc.log("初始化");
+        cc.director.getScheduler().schedule(this.updateData, this,1);
+    }
+
+    private updateData()
+    {
+        cc.log("更新全局");
+    }
 
     private curLoadedCount: number = 0;
     private sumLoadedCount: number = 4;

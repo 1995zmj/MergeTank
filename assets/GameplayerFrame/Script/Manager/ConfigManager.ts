@@ -16,41 +16,43 @@ export class ConfigManager
         return this.instance;
     }
 
-    public loadAllConfig(callback: Function, ...configClasss:{new (callback: Function, caller: any, arg: any): BaseConfigContainer}[]): void
-    {  
-        for (let index = 0; index < configClasss.length; index++) {
-            this.loadConfig(configClasss[index], this.callback, callback);
-        }
-    }
+    
 
-    public getConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>): BaseConfigContainer
-    {
-        for (let i = 0; i < this.configContainerList.length; ++i)
-        {
-            if (this.configContainerList[i].tag == configClass)
-            {
-                return this.configContainerList[i];
-            }
-        }
-        return null;
-    }
+    // public loadAllConfig(callback: Function, ...configClasss:{new (callback: Function, caller: any, arg: any): BaseConfigContainer}[]): void
+    // {  
+    //     for (let index = 0; index < configClasss.length; index++) {
+    //         this.loadConfig(configClasss[index], this.callback, callback);
+    //     }
+    // }
 
-    public loadConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>, callback: Function, arg: any)
-    {
-        let config = new configClass(callback, this, arg);
-        config.tag = configClass;
-        this.configContainerList.push(config);
-    }
+    // public getConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>): BaseConfigContainer
+    // {
+    //     for (let i = 0; i < this.configContainerList.length; ++i)
+    //     {
+    //         if (this.configContainerList[i].tag == configClass)
+    //         {
+    //             return this.configContainerList[i];
+    //         }
+    //     }
+    //     return null;
+    // }
 
-    private callback(callback: Function)
-    {
-        this.curLoadedCount += 1;
-        if (this.configContainerList.length == this.curLoadedCount)
-        {
-            if (callback)
-            {
-                callback();
-            }
-        }
-    }
+    // public loadConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>, callback: Function, arg: any)
+    // {
+    //     let config = new configClass(callback, this, arg);
+    //     config.tag = configClass;
+    //     this.configContainerList.push(config);
+    // }
+
+    // private callback(callback: Function)
+    // {
+    //     this.curLoadedCount += 1;
+    //     if (this.configContainerList.length == this.curLoadedCount)
+    //     {
+    //         if (callback)
+    //         {
+    //             callback();
+    //         }
+    //     }
+    // }
 }
