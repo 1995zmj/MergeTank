@@ -16,5 +16,7 @@ export class ListenerType
     public static readonly MoveDirection = "MoveDirection";
 
     
+    //子弹
+    public static readonly OnSpawnBullet = "OnSpawnBullet";
 
 }

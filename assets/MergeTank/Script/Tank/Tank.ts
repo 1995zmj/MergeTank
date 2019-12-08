@@ -1,7 +1,7 @@
-import { TankAttributes, BulletAttributes } from "../AttributesInterface";
 import Bullet from "./Bullet";
-import TankController from "../TankController";
 import Body from "./Body";
+import TankController from "../Controller/TankController";
+import { TankAttributes } from "../Controller/AttributesInterface";
 
 const { ccclass, property } = cc._decorator;
 

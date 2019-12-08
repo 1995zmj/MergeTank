@@ -1,6 +1,7 @@
 import Tank from "./Tank";
-import { BulletAttributes } from "../AttributesInterface";
-import BulletController from "../BulletController";
+import { BulletAttributes } from "../Controller/AttributesInterface";
+import BulletController from "../Controller/BulletController";
+import { PoolManager } from "../../../GameplayerFrame/Script/Manager/PoolManager";
 
 const { ccclass, property } = cc._decorator;
 
@@ -8,12 +9,18 @@ const { ccclass, property } = cc._decorator;
 export default class Bullet extends cc.Component {
     isvalid: boolean = false;
 
-    bulletAttributes: BulletAttributes = null;
-    private _master: BulletController = null;
+    bulletAttributes: BulletAttributes = {
+
+        bulletType: 0,
+        atk: 2,
+        moveSpeed: 1000,
+        maxDistance: 1000,
+        startPosition: cc.v2(0, -600),
+        direction: cc.v2(0, 1),
+    };
     private _distance: number = null;
     private defaultDirection: cc.Vec2 = cc.v2(0, 1);
-    init(master: BulletController, bulletAttributes: BulletAttributes) {
-        this._master = master;
+    init(bulletAttributes: BulletAttributes) {
         this._distance = 0;
         this.bulletAttributes = bulletAttributes;
 
@@ -28,18 +35,16 @@ export default class Bullet extends cc.Component {
 
     update(dt) {
 
-        if(this._distance > this.bulletAttributes.maxDistance)
-        {
-            this.node.parent = null;
-            this._master.recycleBullet(this.node);
+        if (this._distance > this.bulletAttributes.maxDistance) {
+            PoolManager.getInstance().recycle(this.node);
             return
         }
 
-        this._distance += this.bulletAttributes.speed * dt
+        this._distance += this.bulletAttributes.moveSpeed * dt
 
         // 目前只向前攻击
         let position = this.node.position;
-        this.node.position = position.add(this.bulletAttributes.direction.mul(this.bulletAttributes.speed * dt));
+        this.node.position = position.add(this.bulletAttributes.direction.mul(this.bulletAttributes.moveSpeed * dt));
     }
 
     unuse() {

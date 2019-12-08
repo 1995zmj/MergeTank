@@ -1,10 +1,19 @@
-import { BaseNodePool, NodePoolClass } from "../Pool/BaseNodePool";
+export class Pool extends cc.NodePool {
+    constructor(prefab: cc.Prefab, poolHandlerComp?: { prototype: cc.Component } | string) {
+        super(poolHandlerComp);
+        this._prefab = prefab;
+    }
+    private _prefab: cc.Prefab = null;
+    public creatNewNode(): cc.Node {
+        let node = cc.instantiate(this._prefab);
+        return node;
+    }
+}
 
 export class PoolManager {
     private static instance: PoolManager;
 
-    private nodePoolList: BaseNodePool[] = [];
-    private curLoadedCount: number = 0;
+    private _poolMap: { [key: string]: Pool } = {};
 
     public static getInstance(): PoolManager {
         if (this.instance == null) {
@@ -13,33 +22,42 @@ export class PoolManager {
         return this.instance;
     }
 
-    public loadAllNodePool(callback?: Function, ...nodePoolClasss: {new (callback: Function, caller: any, arg: any): BaseNodePool}[]): void {
-        for (let index = 0; index < nodePoolClasss.length; index++) {
-            this.loadNodePool(nodePoolClasss[index], this.callback, callback);
+    public creatNodePool(prefab: cc.Prefab, poolHandlerComp?: { prototype: cc.Component } | string): Pool {
+
+        let pool: Pool = null;
+        cc.log("创建" + prefab.name);
+        if (this._poolMap[prefab.name]) {
+            cc.log("已经存在", prefab.name);
+            pool = this._poolMap[prefab.name];
         }
+        else {
+            pool = new Pool(prefab, poolHandlerComp);
+            this._poolMap[prefab.name] = pool;
+        }
+
+        return pool;
     }
 
-    public getNodePool<T extends BaseNodePool>(configClass: NodePoolClass<T>): BaseNodePool {
-        for (let i = 0; i < this.nodePoolList.length; ++i) {
-            if (this.nodePoolList[i].tag == configClass) {
-                return this.nodePoolList[i];
-            }
+    spawn(prefabName: string): cc.Node {
+        let node: cc.Node = null;
+        let pool = this._poolMap[prefabName];
+        if (pool.size() > 0) {
+            node = pool.get();
         }
-        return null;
+        else {
+            node = pool.creatNewNode();
+        }
+
+        return node;
     }
 
-    public loadNodePool<T extends BaseNodePool>(nodePoolClass: NodePoolClass<T>, callback: Function, arg: any) {
-        let nodePool = new nodePoolClass(callback, this, arg);
-        nodePool.tag = nodePoolClass;
-        this.nodePoolList.push(nodePool);
-    }
-
-    private callback(callback: Function) {
-        this.curLoadedCount += 1;
-        if (this.nodePoolList.length == this.curLoadedCount) {
-            if (callback) {
-                callback();
-            }
+    recycle(node: cc.Node) {
+        if (!cc.isValid(cc.Node)) {
+            cc.log(node.name + "节点已经不存在");
+            return;
         }
+        let name = node.name;
+        let pool = this._poolMap[name];
+        pool.put(node);
     }
 }

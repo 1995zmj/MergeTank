@@ -19,12 +19,24 @@ export interface BarrelAttributes {
 
 export interface BulletAttributes {
     
+    bulletType: number;
     atk: number;
     moveSpeed: number;
     // -1 代表是无线距离知道碰到障碍物停止
     // 到达最远距离消失
     maxDistance: number;
 
+    startPosition: cc.Vec2;
+    direction: cc.Vec2;
+}
+
+export interface EnemyAttributes {
+    
+    atk: number;
+    hp: number;
+    dfs: number;
+    moveSpeed: number;
+    
     startPosition: cc.Vec2;
     direction: cc.Vec2;
 }

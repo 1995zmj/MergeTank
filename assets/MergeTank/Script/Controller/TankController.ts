@@ -1,9 +1,9 @@
+import { GameController } from "../../../GameplayerFrame/Script/Manager/GameController";
+import { PlayerDataInfo } from "../Data/DataInfo/PlayerDataInfo";
+import { DataStorageManager } from "../../../GameplayerFrame/Script/Manager/DataStorageManager";
 import { TankAttributes } from "./AttributesInterface";
-import Tank from "./Tank/Tank";
-import { GameController } from "../../GameplayerFrame/Script/Manager/GameController";
-import { PlayerDataInfo } from "./Data/DataInfo/PlayerDataInfo";
-import { DataStorageManager } from "../../GameplayerFrame/Script/Manager/DataStorageManager";
-import { Greeter } from "./Data/DataInfo/ShopDataInfo";
+import Tank from "../Tank/Tank";
+
 
 const { ccclass, property } = cc._decorator;
 
