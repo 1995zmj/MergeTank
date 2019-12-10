@@ -6,7 +6,7 @@ export interface  EnemyData {
     def: number;
     hp: number;
     moveSpeed: number;
-    sprite: number;
+    sprite: string;
 }
 
 export class EnemyConfigContainer extends BaseConfigContainer {

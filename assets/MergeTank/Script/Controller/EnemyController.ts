@@ -33,7 +33,7 @@ export default class EnemyController extends cc.Component
 
     start()
     {
-        this.scheduleOnce(this.enemySpawnController, 0.5);
+        this.schedule(this.enemySpawnController, 5);
         // this.schedule(this.spawnBullet, 0.5);
     }
 
@@ -47,10 +47,11 @@ export default class EnemyController extends cc.Component
         let enemyConfigContainer = ConfigManager.getInstance().getConfig(EnemyConfigContainer) as EnemyConfigContainer;
         let enemyData = enemyConfigContainer.getEnemyData(id);
 
+        // 初始位置和初始方向
         let max = 300;
         let min = -300;
         let x = Math.floor(Math.random() * (max - min + 1) + min);
-        let startPosition = cc.v2(x, 600);
+        let startPosition = cc.v2(0, 600);
         let stattDirection = cc.v2(0, -1);
 
         let enemyAttributes: EnemyAttributes = {
@@ -67,19 +68,5 @@ export default class EnemyController extends cc.Component
         enemy.init(enemyAttributes);
         node.parent = this.node;
         this.enemyList.push(enemy);
-    }
-
-    spawnBullet()
-    {
-        let bulletAttributes: BulletAttributes = {
-
-            bulletType: 0,
-            atk: 2,
-            moveSpeed: 1000,
-            maxDistance: 500,
-            startPosition: cc.v2(0, -600),
-            direction: cc.v2(0, 1),
-        };
-        ListenerManager.getInstance().emit(ListenerType.OnSpawnBullet, bulletAttributes);
     }
 }

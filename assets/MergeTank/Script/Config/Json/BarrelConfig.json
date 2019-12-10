@@ -1,5 +1,5 @@
 {
-    "0": {"id":0, "atkSpeed": 100, "bulletType": 0, "sprite":"specialBarrel6_outline"},
-    "1": {"id":1, "atkSpeed": 100, "bulletType": 1, "sprite":"specialBarrel7_outline"},
-    "2": {"id":2, "atkSpeed": 100, "bulletType": 2, "sprite":"specialBarrel5_outline"}
+    "0": {"id":0, "atkSpeed":100, "bulletId":0},
+    "1": {"id":1, "atkSpeed":100, "bulletId":1},
+    "2": {"id":2, "atkSpeed":100, "bulletId":2}
 }

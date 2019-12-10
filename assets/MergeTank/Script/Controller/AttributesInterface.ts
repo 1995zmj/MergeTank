@@ -13,20 +13,22 @@ export interface BodyAttributes {
 }
 
 export interface BarrelAttributes {
+    id: number;
     atkSpeed: number;
-    bulletType: number;
+    bulletId: number;
 }
 
 export interface BulletAttributes {
-    
-    bulletType: number;
+    id: number;
+    spriteFrame: cc.SpriteFrame;
+
     atk: number;
     moveSpeed: number;
     // -1 代表是无线距离知道碰到障碍物停止
     // 到达最远距离消失
     maxDistance: number;
 
-    startPosition: cc.Vec2;
+    startWorldPosition: cc.Vec2;
     direction: cc.Vec2;
 }
 

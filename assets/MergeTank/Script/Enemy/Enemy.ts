@@ -1,5 +1,6 @@
 import { EnemyAttributes } from "../Controller/AttributesInterface";
-import Bullet from "../Tank/Bullet";
+import Bullet from "../Defence/Bullet";
+import { PoolManager } from "../../../GameplayerFrame/Script/Manager/PoolManager";
 
 const { ccclass, property } = cc._decorator;
 
@@ -7,6 +8,7 @@ export enum EnemyType
 {
     MOVE,
     STOP,
+    DEATH,
 }
 
 @ccclass
@@ -37,6 +39,7 @@ export default class Enemy extends cc.Component
     init(enemyAttributes)
     {
         this.enemyAttributes = enemyAttributes;
+        this.state = EnemyType.MOVE;
 
         this.node.position = this.enemyAttributes.startPosition;
 
@@ -81,17 +84,25 @@ export default class Enemy extends cc.Component
         this.node.position = position.add(this.enemyAttributes.direction.mul(distance));
     }
 
+    death()
+    {
+        this.state = EnemyType.STOP;
+        this.node.parent = null;
+        PoolManager.getInstance().recycle(this.node);
+    }
+
     onCollisionEnter(other: cc.BoxCollider, self: cc.BoxCollider)
     {
-
-        this.state = EnemyType.STOP;
-
-        cc.log(other.node);
         let bullet = other.node.getComponent(Bullet);
 
         if (bullet)
         {
             cc.log("被击中");
+            this.death();
+        }
+        else
+        {
+            this.state = EnemyType.STOP;
         }
 
         // // 碰撞系统会计算出碰撞组件在世界坐标系下的相关的值，并放到 world 这个属性里面
@@ -114,5 +125,11 @@ export default class Enemy extends cc.Component
         // var ps = world.points;
     }
 
+    unuse() {
+        cc.log("回收怪物");
+    }
 
+    reuse() {
+        cc.log("从新使用怪物");
+    }
 }
