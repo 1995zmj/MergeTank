@@ -3,38 +3,66 @@ import Bullet from "../Tank/Bullet";
 
 const { ccclass, property } = cc._decorator;
 
-export enum EnemyType {
+export enum EnemyType
+{
     MOVE,
     STOP,
 }
 
 @ccclass
-export default class Enemy extends cc.Component {
+export default class Enemy extends cc.Component
+{
+    @property(cc.Sprite)
+    sprite: cc.Sprite = null;
+
+    @property(cc.Label)
+    label: cc.Label = null;
 
     enemyAttributes: EnemyAttributes = {
+        id: 0,
         atk: 1,
         hp: 1,
-        dfs: 1,
+        def: 1,
         moveSpeed: 40,
 
+        spriteFrame: null,
         startPosition: cc.v2(0, -1001),
         direction: cc.v2(0, -1),
     };
 
-    private defaultDirection: cc.Vec2 = cc.v2(0, -1);
+    private defaultDirection: cc.Vec2 = cc.v2(1, 0);
 
     state: EnemyType = EnemyType.MOVE;
 
-    init(enemyAttributes) {
+    init(enemyAttributes)
+    {
         this.enemyAttributes = enemyAttributes;
 
-        this.node.rotation = this.defaultDirection.signAngle(this.enemyAttributes.direction) / Math.PI * 180;
         this.node.position = this.enemyAttributes.startPosition;
+
+        //计算的角度的方向和显示的方向相反
+        let rotation = this.defaultDirection.signAngle(this.enemyAttributes.direction) / cc.macro.RAD;
+        this.node.rotation = -rotation;
+
+        if (this.enemyAttributes.spriteFrame)
+        {
+            this.sprite.spriteFrame = this.enemyAttributes.spriteFrame;
+        }
+
+        //显示内容
+        this.label.node.rotation = -this.node.rotation; 
+        this.label.string = 
+        "id:" + this.enemyAttributes.id + "\n" +
+        "atk:" + this.enemyAttributes.atk + "\n" + 
+        "hp:" + this.enemyAttributes.hp + "\n" + 
+        "def:" + this.enemyAttributes.def + "\n";
     }
 
-    update(dt) {
+    update(dt)
+    {
 
-        switch (this.state) {
+        switch (this.state)
+        {
             case EnemyType.MOVE:
                 this.move(dt);
                 break;
@@ -44,8 +72,8 @@ export default class Enemy extends cc.Component {
         }
     }
 
-
-    move(dt: number) {
+    move(dt: number)
+    {
         let distance = this.enemyAttributes.moveSpeed * dt
 
         // 目前只向前攻击
@@ -53,14 +81,15 @@ export default class Enemy extends cc.Component {
         this.node.position = position.add(this.enemyAttributes.direction.mul(distance));
     }
 
-    onCollisionEnter(other:cc.BoxCollider, self:cc.BoxCollider) {
+    onCollisionEnter(other: cc.BoxCollider, self: cc.BoxCollider)
+    {
 
         this.state = EnemyType.STOP;
 
         cc.log(other.node);
         let bullet = other.node.getComponent(Bullet);
 
-        if(bullet)
+        if (bullet)
         {
             cc.log("被击中");
         }

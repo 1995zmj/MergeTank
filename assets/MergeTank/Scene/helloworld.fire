@@ -41,8 +41,8 @@
     },
     "_scale": {
       "__type__": "cc.Vec3",
-      "x": 0.28709473388305845,
-      "y": 0.28709473388305845,
+      "x": 0.29160419790104947,
+      "y": 0.29160419790104947,
       "z": 1
     },
     "_quat": {
@@ -1007,7 +1007,7 @@
     "_id": "2bNdnknoRFNr2KV/rtdMwS"
   },
   {
-    "__type__": "6f7efdmKWJKqp2rj8xCHKof",
+    "__type__": "5c3eeAz1lVLWpqtfLvgG0Lg",
     "_name": "",
     "_objFlags": 0,
     "node": {
@@ -1017,7 +1017,7 @@
     "tankPrefab": {
       "__uuid__": "5a270336-8ea4-46f1-a03c-5139ae2ba128"
     },
-    "_id": "caT3xFAdJCkaf4o6Zi7k7u"
+    "_id": "aa90ppo0RDQ6VX3F9FcplN"
   },
   {
     "__type__": "cc.Node",
@@ -1027,7 +1027,7 @@
       "__id__": 2
     },
     "_children": [],
-    "_active": true,
+    "_active": false,
     "_level": 1,
     "_components": [
       {
@@ -1264,6 +1264,20 @@
     "normalEnemyPrefab": {
       "__uuid__": "b862d796-b89e-4925-a97b-dab589f97dae"
     },
+    "enemyConfig": {
+      "__uuid__": "9da5b1c3-4ad2-44bf-860d-9a5cd728c386"
+    },
+    "enemySpriteFrame": [
+      {
+        "__uuid__": "77a24e74-2bdd-4e4f-b49e-911e884b43a1"
+      },
+      {
+        "__uuid__": "7870ac84-ec61-48b8-b008-6fb1bae2ecfd"
+      },
+      {
+        "__uuid__": "f7216f24-f4e4-41f6-8755-929bb8603ab8"
+      }
+    ],
     "_id": "85ldmtRRNGAKXhicmUDbhL"
   },
   {

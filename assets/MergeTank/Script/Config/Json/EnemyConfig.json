@@ -1,0 +1,5 @@
+{
+    "0":{"id":0,"atk": 1,"def": 1, "hp": 10,"moveSpeed": 100, "sprite":"bulletDark3_outline"},
+    "1":{"id":1,"atk": 2,"def": 1, "hp": 10,"moveSpeed": 100, "sprite":"bulletDark1_outline"},
+    "2":{"id":2,"atk": 3,"def": 1, "hp": 10,"moveSpeed": 100, "sprite":"bulletDark2_outline"}
+}

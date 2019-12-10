@@ -3,48 +3,66 @@ import { PoolManager, Pool } from "../../../GameplayerFrame/Script/Manager/PoolM
 import { EnemyAttributes, BulletAttributes } from "./AttributesInterface";
 import { ListenerManager } from "../../../GameplayerFrame/Script/Manager/ListenerManager";
 import { ListenerType } from "../../../GameplayerFrame/Script/Data/ListenerType";
-
+import { ConfigManager } from "../../../GameplayerFrame/Script/Manager/ConfigManager";
+import { EnemyConfigContainer } from "../Config/ConfigContainer/EnemyConfigContainer";
 
 const { ccclass, property } = cc._decorator;
 
 @ccclass
-export default class EnemyController extends cc.Component {
+export default class EnemyController extends cc.Component
+{
 
     @property(cc.Prefab)
     normalEnemyPrefab: cc.Prefab = null;
+
+    @property(cc.JsonAsset)
+    enemyConfig: cc.JsonAsset = null;
+
+    @property(cc.SpriteFrame)
+    enemySpriteFrame: cc.SpriteFrame[] = [];
 
     enemyList: Enemy[] = [];
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad() {
+    onLoad()
+    {
         PoolManager.getInstance().creatNodePool(this.normalEnemyPrefab, Enemy);
+        ConfigManager.getInstance().creatConfig(this.enemyConfig, EnemyConfigContainer);
     }
 
-    start() {
-        this.schedule(this.enemySpawnController, 0.5);
-        this.schedule(this.spawnBullet, 0.5);
-
+    start()
+    {
+        this.scheduleOnce(this.enemySpawnController, 0.5);
+        // this.schedule(this.spawnBullet, 0.5);
     }
 
-    enemySpawnController() {
-        let node = PoolManager.getInstance().spawn("Enemy");
+    enemySpawnController()
+    {
+        let node = PoolManager.getInstance().spawn(Enemy);
         let enemy = node.getComponent(Enemy);
+
+        let id: number = 1;
+
+        let enemyConfigContainer = ConfigManager.getInstance().getConfig(EnemyConfigContainer) as EnemyConfigContainer;
+        let enemyData = enemyConfigContainer.getEnemyData(id);
 
         let max = 300;
         let min = -300;
         let x = Math.floor(Math.random() * (max - min + 1) + min);
+        let startPosition = cc.v2(x, 600);
+        let stattDirection = cc.v2(0, -1);
 
         let enemyAttributes: EnemyAttributes = {
-            atk: 1,
-            hp: 1,
-            dfs: 1,
-            moveSpeed: 40,
-
-            startPosition: cc.v2(x, 600),
-            direction: cc.v2(0, -1),
+            id: id,
+            atk: enemyData.atk,
+            hp: enemyData.hp,
+            def: enemyData.def,
+            moveSpeed: enemyData.moveSpeed,
+            spriteFrame: this.enemySpriteFrame[id],
+            startPosition: startPosition,
+            direction: stattDirection,
         };
-
 
         enemy.init(enemyAttributes);
         node.parent = this.node;
@@ -62,8 +80,6 @@ export default class EnemyController extends cc.Component {
             startPosition: cc.v2(0, -600),
             direction: cc.v2(0, 1),
         };
-        ListenerManager.getInstance().emit(ListenerType.OnSpawnBullet,bulletAttributes);
+        ListenerManager.getInstance().emit(ListenerType.OnSpawnBullet, bulletAttributes);
     }
-
-
 }

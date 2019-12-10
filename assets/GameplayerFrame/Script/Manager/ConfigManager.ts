@@ -1,11 +1,19 @@
-import { BaseConfigContainer, ConfigContainerClass } from "../Config/BaseConfigContainer";
+export interface ConfigContainerClass<T extends BaseConfigContainer>
+{
+    // new (callback: Function, caller: any, arg: any): T;
+    new (json: cc.JsonAsset): T;
+}
+
+export abstract class BaseConfigContainer 
+{
+    
+}
 
 export class ConfigManager
 {
     private static instance: ConfigManager;
 
-    private configContainerList: BaseConfigContainer[] = [];
-    private curLoadedCount: number = 0;
+    private _configContainerMap: { [key: string]: BaseConfigContainer} = {};
 
     public static getInstance(): ConfigManager
     {
@@ -16,6 +24,11 @@ export class ConfigManager
         return this.instance;
     }
 
+    public creatConfig<T extends BaseConfigContainer>(json: cc.JsonAsset,configClass: ConfigContainerClass<T>){
+        let config = new configClass(json);
+        cc.log(configClass["name"]);
+        this._configContainerMap[configClass["name"]] = config;
+    }
     
 
     // public loadAllConfig(callback: Function, ...configClasss:{new (callback: Function, caller: any, arg: any): BaseConfigContainer}[]): void
@@ -25,17 +38,10 @@ export class ConfigManager
     //     }
     // }
 
-    // public getConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>): BaseConfigContainer
-    // {
-    //     for (let i = 0; i < this.configContainerList.length; ++i)
-    //     {
-    //         if (this.configContainerList[i].tag == configClass)
-    //         {
-    //             return this.configContainerList[i];
-    //         }
-    //     }
-    //     return null;
-    // }
+    public getConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>): BaseConfigContainer
+    {
+        return this._configContainerMap[configClass["name"]];
+    }
 
     // public loadConfig<T extends BaseConfigContainer>(configClass: ConfigContainerClass<T>, callback: Function, arg: any)
     // {

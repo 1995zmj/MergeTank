@@ -31,11 +31,12 @@ export interface BulletAttributes {
 }
 
 export interface EnemyAttributes {
-    
+    id: number;
     atk: number;
     hp: number;
-    dfs: number;
+    def: number;
     moveSpeed: number;
+    spriteFrame: cc.SpriteFrame;
     
     startPosition: cc.Vec2;
     direction: cc.Vec2;

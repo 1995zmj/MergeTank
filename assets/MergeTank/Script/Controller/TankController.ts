@@ -18,10 +18,7 @@ export default class TankController extends cc.Component
     onLoad()
     {
         GameController.getInstance().init();
-
         let playerDataInfo = new PlayerDataInfo("Tank");
-        // cc.log(playerDataInfo.getStorageKey());
-
         DataStorageManager.initLocalData(playerDataInfo,()=>{});
         playerDataInfo.level = 3;
     }
