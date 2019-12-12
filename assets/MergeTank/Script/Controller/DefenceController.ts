@@ -1,3 +1,7 @@
+import Enemy from "../Enemy/Enemy";
+import { EnemyConfigContainer } from "../Config/ConfigContainer/EnemyConfigContainer";
+import EnemyController from "./EnemyController";
+import Barrel from "../Defence/Barrel";
 
 const { ccclass, property } = cc._decorator;
 
@@ -7,47 +11,40 @@ export default class DefenceController extends cc.Component
     @property(cc.JsonAsset)
     barrelConfig: cc.JsonAsset = null;
 
-    onLoad()
+    @property(EnemyController)
+    enemyController: EnemyController = null;
+    
+    @property(Barrel)
+    barrel: Barrel = null;
+
+
+    onLoad () {
+        this.node.on(cc.Node.EventType.TOUCH_START, this.onTouchStart, this);
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
+        this.node.on(cc.Node.EventType.TOUCH_END, this.onTouchEnd, this);
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this.onTouchEnd, this);
+    }
+
+    onTouchStart(event: cc.Event.EventTouch)
     {
 
     }
 
-    // start()
-    // {
-    //     let tankAttributes = {
-    //         bodyType: 0,
-    //         BarrelsType: [0],
-    //         BarrelsPosition: [cc.v2(0,0)],
-    //         startPosition: cc.v2(0, 0),
-    //         direction: cc.v2(0, 1),
-    //     }
-    //     this.spawnTank(tankAttributes);
-    // }
+    onTouchMove(event: cc.Event.EventTouch)
+    {
 
-    // spawnTank(tankAttributes: TankAttributes)
-    // {
-    //     let node: cc.Node = null;
-    //     if (this.tankNodePool.size() > 0)
-    //     {
-    //         node = this.tankNodePool.get();
-    //     }
-    //     else
-    //     {
-    //         node = cc.instantiate(this.tankPrefab);
-    //     }
-    //     let tank = node.getComponent(Tank);
-    //     if (tank)
-    //     {
-    //         tank.init(this, tankAttributes);
-    //     }
-    //     tank.node.parent = this.node;
-    // }
+        let pos = event.getLocation();
+        this.barrel.setTarge(pos);
+        cc.log("direction: ", pos);
+    }
 
-    // recycleTank(node: cc.Node)
-    // {
-    //     this.tankNodePool.put(node);
-    // }
+    onTouchEnd(event: cc.Event.EventTouch)
+    {
 
-    
+    }
 
+    onTouchCancel()
+    {
+
+    }
 }

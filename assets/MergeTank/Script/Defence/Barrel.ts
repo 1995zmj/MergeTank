@@ -49,8 +49,8 @@ export default class Barrel extends cc.Component
 
     setTarge(worldPosition: cc.Vec2)
     {
-        // let pos = this.axesNode.parent.convertToNodeSpaceAR(worldPosition);
-        let direction = cc.v2(1, 1);
+        let pos = this.axesNode.parent.convertToNodeSpaceAR(worldPosition);
+        let direction = pos.sub(this.axesNode.position);
 
         this.direction = direction.normalize();
 

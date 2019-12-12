@@ -1,4 +1,3 @@
-import Bullet from "./Tank/Bullet";
 
 const {ccclass, property} = cc._decorator;
 

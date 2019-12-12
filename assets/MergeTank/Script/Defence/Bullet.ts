@@ -67,10 +67,10 @@ export default class Bullet extends cc.Component {
     }
 
     unuse() {
-        cc.log("回收子弹");
+        // cc.log("回收子弹");
     }
 
     reuse() {
-        cc.log("从新使用子弹");
+        // cc.log("从新使用子弹");
     }
 }

@@ -1,9 +1,15 @@
+import { DataInfo } from "../Data/DataInfo";
+import { DataStorageManager } from "../../../GameplayerFrame/Script/Manager/DataStorageManager";
+import { GameData } from "../Data/GameData";
 
 export class GameDataManager
 {
     private static instance: GameDataManager;
 
-    // private gameData: GameData = new GameData();
+    // 本地数据
+    private dataInfo: DataInfo = new DataInfo("game");
+    // 运行数据
+    private gameData: GameData = new GameData();
 
     static getInstance(): GameDataManager
     {
@@ -14,16 +20,23 @@ export class GameDataManager
         return this.instance;
     }
 
-    // getGameData(): GameData
-    // {
-    //     return this.gameData;
-    // }
+    getDataInfo(): DataInfo
+    {
+        return this.dataInfo;
+    }
+
+    getGameData(): GameData
+    {
+        return this.gameData;
+    }
 
     initData(callback: Function)
     {
-        // this.gameData.initPlayerInfo();
-        // this.gameData.initShopInfo();
-        // this.gameData.initWarPlatformInfo();
-        // callback();
+        cc.log(this.dataInfo);
+        DataStorageManager.initLocalData(this.dataInfo,()=>{});
+        cc.log(this.dataInfo);
+        callback();
     }
+
+    
 }

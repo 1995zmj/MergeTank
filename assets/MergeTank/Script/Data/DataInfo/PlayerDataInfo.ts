@@ -1,7 +1,11 @@
 import { BaseDataInfo } from "../../../../GameplayerFrame/Script/DataInfo/BaseDataInfo";
-import { TankDataInfo } from "./TankDataInfo";
 import { DataStorageManager } from "../../../../GameplayerFrame/Script/Manager/DataStorageManager";
 
+export interface PlatformUnitInfo
+{
+    lock: boolean;
+    level: number;
+}
 export class PlayerDataInfo extends BaseDataInfo
 {
     initStorageKey()
@@ -13,7 +17,6 @@ export class PlayerDataInfo extends BaseDataInfo
     public set level(v: number)
     {
         this._level = v;
-        cc.log(this._level);
         this.updateData(this.getStorageKey() + "_level", this._level);
     }
     public get level(): number
@@ -21,8 +24,7 @@ export class PlayerDataInfo extends BaseDataInfo
         return this._level;
     }
 
-
-    private _teamList: number[] = [-1, -1, -1];
+    private _teamList: number[] = [];
     public set teamList(v: number[])
     {
         this._teamList = v;
@@ -33,10 +35,18 @@ export class PlayerDataInfo extends BaseDataInfo
         return this._teamList;
     }
 
-    private _tankInfo: TankDataInfo = new TankDataInfo(this.getStorageKey());
+    private _unitInfoList: PlatformUnitInfo[] = [];
+    public set unitInfoList(v: PlatformUnitInfo[])
+    {
+        this._unitInfoList = v;
+        this.updateData(this.getStorageKey() + "_unitInfoList", this._unitInfoList);
+    }
+    public get unitInfoList(): PlatformUnitInfo[]
+    {
+        return this._unitInfoList;
+    }
 
-
-    updateData(key:string,value: any)
+    updateData(key: string, value: any)
     {
         DataStorageManager.setLocalItemImmediately(key, value);
     }

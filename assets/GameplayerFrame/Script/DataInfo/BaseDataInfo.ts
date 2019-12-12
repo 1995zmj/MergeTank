@@ -1,12 +1,9 @@
-
+// 保存的值不能为null 这样就不知道转化成什么值了
 export abstract class BaseDataInfo{
 
     constructor(prefix: string){
         this.initStorageKey();
-        cc.log("base1:" + this._storageKey);
         this._storageKey = prefix + "_" + this._storageKey;
-        cc.log("base2:" + this._storageKey);
-        
     }
     
     protected _storageKey = "BaseDataInfo";

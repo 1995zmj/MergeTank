@@ -26,7 +26,6 @@ export class ConfigManager
 
     public creatConfig<T extends BaseConfigContainer>(json: cc.JsonAsset,configClass: ConfigContainerClass<T>){
         let config = new configClass(json);
-        cc.log(configClass["name"]);
         this._configContainerMap[configClass["name"]] = config;
     }
     
